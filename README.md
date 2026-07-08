@@ -1,46 +1,46 @@
 # 📱 Pokédex Application
 
-Uma aplicação web interativa e responsiva que replica o funcionamento de uma Pokédex, permitindo a busca detalhada de Pokémon por nome ou número de identificação ID. O projeto consome dados em tempo real da API pública PokéAPI, apresentando animações clássicas e estados dinâmicos de carregamento.
+An interactive and responsive web application that replicates the functionality of a Pokédex, allowing users to search for Pokémon in detail by name or ID number. The project consumes real-time data from the public PokéAPI, featuring classic animations and dynamic loading states.
 
-Construído como parte do meu portfólio pessoal para demonstrar práticas modernas de desenvolvimento front-end, componentização eficiente e estilização utilitária.
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-O projeto foi desenvolvido utilizando o ecossistema moderno do ecossistema JavaScript/TypeScript:
-
-- **[React](https://react.dev/):** Biblioteca para construção da interface baseada em componentes e gerenciamento de estados (`useState`, `useEffect`).
-- **[TypeScript](https://www.typescriptlang.org/):** Tipagem estática para garantir maior previsibilidade, segurança e autocompletação durante o desenvolvimento.
-- **[Vite](https://vite.dev/):** Ferramenta de build extremamente rápida para o ecossistema front-end.
-- **[Tailwind CSS](https://tailwindcss.com/):** Framework CSS utilitário para estilização rápida, responsiva e focada na performance visual.
-- **[PokéAPI](https://pokeapi.co/):** API RESTful utilizada para consumir dados atualizados do universo Pokémon.
+Built as part of my personal portfolio to demonstrate modern front-end development practices, efficient componentization, and utility-first styling.
 
 ---
 
-## ⚙️ Funcionalidades Principais
+## 🚀 Technologies Used
 
-- **Busca Flexível:** Pesquisa direta de qualquer Pokémon através do nome ou pelo número da Pokédex.
-- **Navegação Sequencial:** Botões de paginação (`Prev` e `Next`) para avançar ou retroceder na numeração dos registros de forma fluida.
-- **Visualização Dinâmica:** Exibição de sprites animados (estilo clássico da Geração V: Black & White) integrados à interface de forma posicional.
-- **Tratamento de Estados:**
-  - Exibição visual de feedback durante o carregamento dos dados (`Loading...`).
-  - Tratamento de exceções e erros amigáveis quando um termo pesquisado não é encontrado (`Not found :(`).
-- **Design Responsivo:** Interface otimizada via Tailwind utilizando valores dinâmicos (`clamp`) para se ajustar corretamente a diferentes tamanhos de tela.
+The project was developed using a modern JavaScript/TypeScript ecosystem:
+
+- **[React](https://react.dev/):** Library for building component-based user interfaces and managing state (`useState`, `useEffect`).
+- **[TypeScript](https://www.typescriptlang.org/):** Static typing to ensure greater predictability, safety, and auto-completion during development.
+- **[Vite](https://vite.dev/):** Extremely fast build tool for the front-end ecosystem.
+- **[Tailwind CSS](https://tailwindcss.com/):** Utility-first CSS framework for rapid, responsive styling focused on visual performance.
+- **[PokéAPI](https://pokeapi.co/):** RESTful API used to consume up-to-date data from the Pokémon universe.
 
 ---
 
-## 📂 Estrutura do Projeto
+## ⚙️ Core Features
 
-A organização dos arquivos segue as boas práticas de separação de conceitos:
+- **Flexible Search:** Direct search for any Pokémon using its name or Pokédex number.
+- **Sequential Navigation:** Pagination buttons (`Prev` and `Next`) to smoothly advance or go back through the registry numbers.
+- **Dynamic Visualization:** Display of animated sprites (classic Generation V: Black & White style) seamlessly integrated into the layout.
+- **State Handling:**
+  - Visual feedback display during data fetching (`Loading...`).
+  - Graceful error handling when a searched term is not found (`Not found :(`).
+- **Responsive Design:** Interface optimized via Tailwind using dynamic values (`clamp`) to adjust perfectly across different screen sizes.
+
+---
+
+## 📂 Project Structure
+
+The file organization follows standard separation of concerns practices:
 
 ```text
 pokedex/
-├── public/                 # Arquivos estáticos globais
+├── public/                 # Global static files
 └── src/
-    ├── assets/             # Imagens, logotipos e vetores locais (ex: logoPokedex.svg)
-    ├── services/           # Camada de comunicação com APIs externas (fetch/axios)
-    │   └── pokeApi.ts      # Função de requisição e tratamento de busca na PokéAPI
-    ├── App.tsx             # Componente principal, controle de estados e layout
-    ├── index.css           # Configurações globais de estilos e Tailwind
-    └── main.tsx            # Ponto de entrada do React e renderização na árvore DOM
+    ├── assets/             # Local images, logos, and vectors (e.g., logoPokedex.svg)
+    ├── services/           # Communication layer with external APIs (fetch/axios)
+    │   └── pokeApi.ts      # PokéAPI request and search handling function
+    ├── App.tsx             # Main component, state control, and layout
+    ├── index.css           # Global style configurations and Tailwind setup
+    └── main.tsx            # React entry point and DOM tree rendering
