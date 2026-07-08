@@ -1,0 +1,84 @@
+import { useState, useEffect } from "react";
+import { fetchPokemon } from "./services/pokeApi";
+import logoPokedex from "./assets/logoPokedex.svg";
+
+const buttonStyles = "w-1/2 p-[4%] border-2 border-black rounded-[5px] text-[clamp(5px,5vw,1rem)] font-semibold text-white bg-[#444] shadow-[-2px_3px_0_#222,-4px_6px_0_#000] transition-all active:-translate-x-1 active:translate-y-1.5 active:shadow-none"
+
+const INITIAL_POKEMON = 1
+
+export default function App() {
+  const [pokemonName, setPokemonName] = useState("");
+  const [pokemonId, setPokemonId] = useState<number | null>(null)
+  const [pokemonSprite, setPokemonSprite] = useState("")
+  const [inputValue, setInputValue] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [currentId, setCurrentId] = useState(INITIAL_POKEMON)
+
+  const renderPokemon = async (pokemon: string | number) => {
+    setIsLoading(true)
+
+    try {
+      const data = await fetchPokemon(pokemon);
+      setPokemonName(data.name)
+      setPokemonId(data.id)
+      setCurrentId(data.id)
+      setPokemonSprite(data.sprites.versions['generation-v']['black-white'].animated.front_default)
+    } catch (error) {
+      setPokemonName("Not found :(")
+      setPokemonId(null)
+      setPokemonSprite("")
+      console.log(error);
+    } finally {
+      setIsLoading(false)
+    }
+  };
+
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    renderPokemon(inputValue)
+    setInputValue("")
+  }
+
+  const buttonPrev = () => {
+    if (currentId > 1) {
+      const newId = currentId - 1
+      setCurrentId(newId)
+      renderPokemon(newId)
+    }
+  }
+
+  const buttonNext = () => {
+    const newId = currentId + 1
+    setCurrentId(newId)
+    renderPokemon(newId)
+  }
+
+  useEffect(() => {
+    renderPokemon(INITIAL_POKEMON)
+  }, [])
+
+
+  return (
+    <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
+      <div className="px-4 relative">
+        {pokemonSprite && (
+          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 h-[18%]" />
+        )}
+        <h1 className="absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] text-[clamp(8px,5vw,25px)]">
+          <span>{isLoading ? "" : pokemonId}</span> - <span className="text-[#3a444d] capitalize">{isLoading ? "Loading..." : pokemonName}</span>
+        </h1>
+
+        <form className="absolute w-[65%] top-[65%] left-[13.5%] text-center" onSubmit={handleSubmit}>
+          <input type="search" placeholder="Name or Number" required className="w-full p-[4%] border-2 border-[#333] rounded-[5px] font-semibold text-[#4a444d] bg-white text-[clamp(8px,5vw,1rem)] shadow-[-3px_4px_0_#888,-5px_7px_0_#333]" value={inputValue} onChange={(event) => setInputValue(event.target.value)} />
+        </form>
+
+        <div className="absolute bottom-[10%] left-[50%] w-[65%] text-center translate-x-[-57%] flex gap-5">
+          <button className={buttonStyles} onClick={buttonPrev}>&lt; Prev</button>
+          <button className={buttonStyles} onClick={buttonNext}>Next &gt;</button>
+        </div>
+
+        <img src={logoPokedex} alt="Ilustração de uma Pokédex vermelha com tela exibindo um cenário de grama e árvores em estilo pixel art" className="max-w-106.25 w-full" />
+      </div>
+    </main>
+  )
+}
