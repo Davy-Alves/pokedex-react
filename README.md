@@ -34,7 +34,7 @@ The project was developed using a modern JavaScript/TypeScript ecosystem:
 
 The file organization follows standard separation of concerns practices:
 
-```text
+````text
 pokedex/
 ├── public/                 # Global static files
 └── src/
@@ -44,3 +44,43 @@ pokedex/
     ├── App.tsx             # Main component, state control, and layout
     ├── index.css           # Global style configurations and Tailwind setup
     └── main.tsx            # React entry point and DOM tree rendering
+````
+
+---
+
+## 🛠️ How to Run the Project Locally
+
+Follow the steps below to run the application on your machine:
+
+1. **Clone the repository:**
+
+```bash
+git clone https://github.com/Davy-Alves/pokedex-react.git
+```
+
+2. **Access the project directory:**
+
+```bash
+cd pokedex-react
+```
+
+3. **Install the necessary dependencies:**
+
+```bash
+npm install
+```
+
+4. **Start the development server:**
+
+```bash
+npm run dev
+```
+
+5. **Access it in your browser:**
+   Open the local address indicated in your terminal (usually `http://localhost:5173`).
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. Feel free to use, study, and modify the code.
