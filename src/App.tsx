@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { fetchPokemon } from "./services/pokeApi";
+import { typeData } from "./utils/typeIcons"
 import logoPokedex from "./assets/logoPokedex.svg";
 
 const buttonStyles = "w-1/2 p-[4%] border-2 border-black rounded-[5px] text-[clamp(5px,5vw,1rem)] font-semibold text-white bg-[#444] shadow-[-2px_3px_0_#222,-4px_6px_0_#000] transition-all active:-translate-x-1 active:translate-y-1.5 active:shadow-none"
@@ -13,6 +14,7 @@ export default function App() {
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [currentId, setCurrentId] = useState(INITIAL_POKEMON)
+  const [pokemonTypes, setPokemonTypes] = useState<string[]>([])
 
   const renderPokemon = async (pokemon: string | number) => {
     setIsLoading(true)
@@ -23,10 +25,12 @@ export default function App() {
       setPokemonId(data.id)
       setCurrentId(data.id)
       setPokemonSprite(data.sprites.versions['generation-v']['black-white'].animated.front_default)
+      setPokemonTypes(data.types.map((typeInfo: any) => (typeInfo.type.name)))
     } catch (error) {
       setPokemonName("Not found :(")
       setPokemonId(null)
       setPokemonSprite("")
+      setPokemonTypes([])
       console.log(error);
     } finally {
       setIsLoading(false)
@@ -61,12 +65,28 @@ export default function App() {
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
       <div className="px-4 relative">
+
         {pokemonSprite && (
-          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 h-[18%]" />
+          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 h-[18%] max-w-[50%]" />
         )}
+
         <h1 className="absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] text-[clamp(8px,5vw,25px)]">
           <span>{isLoading ? "" : pokemonId}</span> - <span className="text-[#3a444d] capitalize">{isLoading ? "Loading..." : pokemonName}</span>
         </h1>
+
+        {!isLoading && pokemonTypes.length > 0 && (
+          <div className="absolute flex bottom-[67%] right-[29%] gap-0.5 sm:gap-1">
+            {pokemonTypes.map((type) => {
+              const currentType = typeData[type]
+              if (!currentType) return null
+              return (
+                <div key={type} title={type} className={`${currentType.colorClass} w-6 h-6 sm:w-7 sm:h-7  rounded-full flex justify-center items-center border-2 border-white cursor-pointer`}>
+                  <img src={currentType.icon} alt={`Icone do tipo ${type}`} className="w-[60%] h-[60%]" />
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         <form className="absolute w-[65%] top-[65%] left-[13.5%] text-center" onSubmit={handleSubmit}>
           <input type="search" placeholder="Name or Number" required className="w-full p-[4%] border-2 border-[#333] rounded-[5px] font-semibold text-[#4a444d] bg-white text-[clamp(8px,5vw,1rem)] shadow-[-3px_4px_0_#888,-5px_7px_0_#333]" value={inputValue} onChange={(event) => setInputValue(event.target.value)} />
