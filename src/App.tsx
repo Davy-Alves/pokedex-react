@@ -61,6 +61,15 @@ export default function App() {
     renderPokemon(INITIAL_POKEMON)
   }, [])
 
+  const displayedText = isLoading ? " - Loading..." : `${pokemonId || ""} - ${pokemonName}`
+
+  let displayTextSizeClass = "text-[clamp(8px,5vw,25px)]"
+
+  if (displayedText.length > 28) {
+    displayTextSizeClass = "text-[clamp(8px,3vw,14px)]"
+  } else if (displayedText.length > 19) {
+    displayTextSizeClass = "text-[clamp(8px,4vw,19px)]"
+  }
 
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
@@ -70,7 +79,7 @@ export default function App() {
           <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 h-[18%] max-w-[50%]" />
         )}
 
-        <h1 className="absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] text-[clamp(8px,5vw,25px)]">
+        <h1 className={`absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] ${displayTextSizeClass}`}>
           <span>{isLoading ? "" : pokemonId}</span> - <span className="text-[#3a444d] capitalize">{isLoading ? "Loading..." : pokemonName}</span>
         </h1>
 
