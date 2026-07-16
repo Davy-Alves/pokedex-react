@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { fetchPokemon } from "./services/pokeApi";
 import { typeData } from "./utils/typeIcons"
+import { typeBackgrounds } from "./utils/typeBackgrounds";
 import logoPokedex from "./assets/logoPokedex.svg";
+
 
 const buttonStyles = "w-1/2 p-[4%] border-2 border-black rounded-[5px] text-[clamp(5px,5vw,1rem)] font-semibold text-white bg-[#444] shadow-[-2px_3px_0_#222,-4px_6px_0_#000] transition-all active:-translate-x-1 active:translate-y-1.5 active:shadow-none"
 
@@ -71,19 +73,37 @@ export default function App() {
     displayTextSizeClass = "text-[clamp(8px,4vw,19px)]"
   }
 
+  const currentBackground = pokemonName === "Not found :("
+    ? typeBackgrounds.normal
+    : typeBackgrounds[pokemonTypes[0]]
+
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
       <div className="px-4 relative">
 
+        {currentBackground && (
+          <img
+            src={currentBackground}
+            alt="Cenário do tipo do Pokémon"
+            className="absolute rounded-md object-cover border-2 border-black"
+            style={{
+              top: "26.5%",
+              left: "18%",
+              width: "56%",
+              height: "27.5%",
+            }}
+          />
+        )}
+
         {pokemonSprite && (
-          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 h-[18%] max-w-[50%]" />
+          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 max-h-[12%] min-[425px]:max-h-full scale-150" />
         )}
 
         <h1 className={`absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] ${displayTextSizeClass}`}>
           <span>{isLoading ? "" : pokemonId}</span> - <span className="text-[#3a444d] capitalize">{isLoading ? "Loading..." : pokemonName}</span>
         </h1>
 
-        {!isLoading && pokemonTypes.length > 0 && (
+        {pokemonTypes.length > 0 && (
           <div className="absolute flex bottom-[67%] right-[29%] gap-0.5 sm:gap-1">
             {pokemonTypes.map((type) => {
               const currentType = typeData[type]
