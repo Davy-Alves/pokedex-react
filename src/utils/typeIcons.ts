@@ -18,11 +18,11 @@ import steelIcon from "../assets/types/steel.svg";
 import waterIcon from "../assets/types/water.svg";
 
 interface TypeInfo {
-    icon: string
-    colorClass: string
+  icon: string;
+  colorClass: string;
 }
 
-export const typeData: {[key: string]: TypeInfo} = {
+export const typeData: { [key: string]: TypeInfo } = {
   bug: { icon: bugIcon, colorClass: "bg-[#92BC2C]" },
   dark: { icon: darkIcon, colorClass: "bg-[#595761]" },
   dragon: { icon: dragonIcon, colorClass: "bg-[#0C69C8]" },
@@ -40,5 +40,5 @@ export const typeData: {[key: string]: TypeInfo} = {
   psychic: { icon: psychicIcon, colorClass: "bg-[#FA8581]" },
   rock: { icon: rockIcon, colorClass: "bg-[#C9BB8A]" },
   steel: { icon: steelIcon, colorClass: "bg-[#5695A3]" },
-  water: { icon: waterIcon, colorClass: "bg-[#539DDF]" }
+  water: { icon: waterIcon, colorClass: "bg-[#539DDF]" },
 };
