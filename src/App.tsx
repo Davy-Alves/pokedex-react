@@ -3,6 +3,7 @@ import { fetchPokemon, fetchPokemonList } from "./services/pokeApi";
 import { typeData } from "./utils/typeIcons"
 import { typeBackgrounds } from "./utils/typeBackgrounds";
 import logoPokedex from "./assets/logoPokedex.svg";
+import shinyIcon from "./assets/shinyIcon.svg";
 
 
 const buttonStyles = "w-1/2 p-[4%] border-2 border-black rounded-[5px] text-[clamp(5px,5vw,1rem)] font-semibold text-white bg-[#444] shadow-[-2px_3px_0_#222,-4px_6px_0_#000] transition-all active:-translate-x-1 active:translate-y-1.5 active:shadow-none"
@@ -13,6 +14,8 @@ export default function App() {
   const [pokemonName, setPokemonName] = useState("");
   const [pokemonId, setPokemonId] = useState<number | null>(null)
   const [pokemonSprite, setPokemonSprite] = useState("")
+  const [pokemonShinySprite, setPokemonShinySprite] = useState("")
+  const [isShiny, setIsShiny] = useState(false)
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [currentId, setCurrentId] = useState(INITIAL_POKEMON)
@@ -29,7 +32,9 @@ export default function App() {
       setPokemonId(data.id)
       setCurrentId(data.id)
       setPokemonSprite(data.sprites.versions['generation-v']['black-white'].animated.front_default)
+      setPokemonShinySprite(data.sprites.versions['generation-v']['black-white'].animated.front_shiny)
       setPokemonTypes(data.types.map((typeInfo: any) => (typeInfo.type.name)))
+      setIsShiny(false)
     } catch (error) {
       setPokemonName("Not found :(")
       setPokemonId(null)
@@ -102,6 +107,12 @@ export default function App() {
     setSuggestionsNames(filtered.slice(0, 30))
   }
 
+  const spriteToShow = isShiny ? pokemonShinySprite : pokemonSprite
+
+  const toggleShiny = () => {
+    setIsShiny(!isShiny)
+  }
+
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
       <div className="px-4 relative">
@@ -120,8 +131,8 @@ export default function App() {
           />
         )}
 
-        {pokemonSprite && (
-          <img src={pokemonSprite} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 max-h-[12%] min-[425px]:max-h-full scale-150" />
+        {spriteToShow && (
+          <img src={spriteToShow} alt={`GIF animado do ${pokemonName || "Pokemon"}`} className="absolute bottom-[55%] left-2/4 translate-x-[-63%] translate-y-1/5 max-h-[12%] min-[425px]:max-h-full scale-150" />
         )}
 
         <h1 className={`absolute font-bold text-[#aaa] font-oxanium top-[54.5%] right-[27%] ${displayTextSizeClass}`}>
@@ -141,6 +152,17 @@ export default function App() {
             })}
           </div>
         )}
+
+        <button
+          onClick={toggleShiny}
+          title="Ver versão shiny"
+          className={`absolute bottom-[67%] left-[21%] w-9 h-6 sm:w-10 sm:h-7 rounded-md border-2 border-black flex items-center justify-center cursor-pointer shadow-[-2px_2px_0_#000] transition-all active:-translate-x-0.5 active:translate-y-0.5 active:shadow-none ${isShiny
+              ? "bg-linear-to-br from-[#FAC775] to-[#EF9F27]"
+              : "bg-linear-to-br from-[#B4B2A9] to-[#888780]"
+            }`}
+        >
+          <img src={shinyIcon} alt="Ícone shiny" className="w-[65%] h-[65%]" />
+        </button>
 
         <form className="absolute w-[65%] top-[65%] left-[13.5%] text-center" onSubmit={handleSubmit}>
           <input
