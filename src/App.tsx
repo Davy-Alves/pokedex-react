@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { fetchPokemon } from "./services/pokeApi";
+import React, { useState, useEffect } from "react";
+import { fetchPokemon, fetchPokemonList } from "./services/pokeApi";
 import { typeData } from "./utils/typeIcons"
 import { typeBackgrounds } from "./utils/typeBackgrounds";
 import logoPokedex from "./assets/logoPokedex.svg";
@@ -17,6 +17,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [currentId, setCurrentId] = useState(INITIAL_POKEMON)
   const [pokemonTypes, setPokemonTypes] = useState<string[]>([])
+  const [allPokemonNames, setAllPokemonNames] = useState<string[]>([])
+  const [suggestionsNames, setSuggestionsNames] = useState<string[]>([])
 
   const renderPokemon = async (pokemon: string | number) => {
     setIsLoading(true)
@@ -61,6 +63,13 @@ export default function App() {
 
   useEffect(() => {
     renderPokemon(INITIAL_POKEMON)
+
+    fetchPokemonList()
+      .then((results) => {
+        const names = results.map((pokemon: { name: string }) => pokemon.name)
+        setAllPokemonNames(names)
+      })
+      .catch((error) => console.log(error))
   }, [])
 
   const displayedText = isLoading ? " - Loading..." : `${pokemonId || ""} - ${pokemonName}`
@@ -76,6 +85,22 @@ export default function App() {
   const currentBackground = pokemonName === "Not found :("
     ? typeBackgrounds.normal
     : typeBackgrounds[pokemonTypes[0]]
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+    setInputValue(value)
+
+    if (value.trim() === "") {
+      setSuggestionsNames([])
+      return
+    }
+
+    const filtered = allPokemonNames.filter((name) =>
+      name.startsWith(value.toLocaleLowerCase())
+    )
+
+    setSuggestionsNames(filtered.slice(0, 30))
+  }
 
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex justify-center items-center">
@@ -118,8 +143,33 @@ export default function App() {
         )}
 
         <form className="absolute w-[65%] top-[65%] left-[13.5%] text-center" onSubmit={handleSubmit}>
-          <input type="search" placeholder="Name or Number" required className="w-full p-[4%] border-2 border-[#333] rounded-[5px] font-semibold text-[#4a444d] bg-white text-[clamp(8px,5vw,1rem)] shadow-[-3px_4px_0_#888,-5px_7px_0_#333]" value={inputValue} onChange={(event) => setInputValue(event.target.value)} />
+          <input
+            type="search"
+            placeholder="Name or Number"
+            required
+            className="w-full p-[4%] border-2 border-[#333] rounded-[5px] font-semibold text-[#4a444d] bg-white text-[clamp(8px,5vw,1rem)] shadow-[-3px_4px_0_#888,-5px_7px_0_#333] focus:outline-none focus:ring-0"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
         </form>
+
+        {suggestionsNames.length > 0 && (
+          <ul className="absolute w-[65%] top-[74%] min-[425px]:top-[73%] left-[13.5%] bg-white border-2 border-[#333] rounded-[5px] max-h-32 overflow-y-auto z-20 shadow-[-3px_4px_0_#888,-5px_7px_0_#333]">
+            {suggestionsNames.map((name) => (
+              <li
+                key={name}
+                onClick={() => {
+                  setInputValue(name)
+                  setSuggestionsNames([])
+                  renderPokemon(name)
+                }}
+                className="px-3 py-1 capitalize cursor-pointer hover:bg-gray-200 text-sm"
+              >
+                {name}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="absolute bottom-[10%] left-[50%] w-[65%] text-center translate-x-[-57%] flex gap-5">
           <button className={buttonStyles} onClick={buttonPrev}>&lt; Prev</button>

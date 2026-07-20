@@ -11,3 +11,16 @@ export const fetchPokemon = async (pokemon: string | number) => {
 
   return data;
 };
+
+export const fetchPokemonList = async () => {
+  const response = await fetch(
+    "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0",
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar lista de Pokemon");
+  }
+
+  const data = await response.json();
+  return data.results;
+};
