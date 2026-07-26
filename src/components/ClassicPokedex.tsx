@@ -12,7 +12,11 @@ import logoPokedex from "../assets/logoPokedex.svg"
 
 const buttonStyles = "w-1/2 p-[4%] border-2 border-black rounded-[5px] text-[clamp(5px,5vw,1rem)] font-semibold text-white bg-[#444] shadow-[-2px_3px_0_#222,-4px_6px_0_#000] transition-all active:-translate-x-1 active:translate-y-1.5 active:shadow-none"
 
-export default function ClassicPokedex() {
+interface ClassicPokedexProps {
+  onOpenDetails: (id: number) => void
+}
+
+export default function ClassicPokedex({ onOpenDetails }: ClassicPokedexProps) {
   const [inputValue, setInputValue] = useState("")
   const { suggestionsNames, setSuggestionsNames, handleInputChange } = useAutocomplete(setInputValue)
   const { pokemonName, pokemonId, pokemonSprite, pokemonShinySprite, isLoading, pokemonTypes, renderPokemon, buttonPrev, buttonNext, notice } = usePokemon()
@@ -39,6 +43,16 @@ export default function ClassicPokedex() {
         <p className="absolute top-[2%] left-1/2 -translate-x-1/2 w-[80%] text-center text-[10px] sm:text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full border border-yellow-400 z-30 shadow-sm">
           {notice}
         </p>
+      )}
+
+      {pokemonId && pokemonName !== "Not found :(" && !isLoading && (
+        <button
+          onClick={() => onOpenDetails(pokemonId)}
+          className="absolute bottom-[67%] left-[21%] w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-blue-600 border-2 border-white flex items-center justify-center text-white text-sm sm:text-lg font-serif italic font-bold shadow-sm hover:bg-blue-500 hover:scale-110 transition-all z-20 cursor-pointer"
+          title="Ver Ficha Completa"
+        >
+          i
+        </button>
       )}
 
       {spriteToShow && (

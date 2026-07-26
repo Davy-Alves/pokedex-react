@@ -2,7 +2,11 @@ import { useState } from "react"
 import { usePokemonGrid } from "../hooks/usePokemonGrid"
 import PokemonCard from "./PokemonCard"
 
-export default function GridCatalog() {
+interface GridCatalogProps {
+  onOpenDetails: (id: number) => void
+}
+
+export default function GridCatalog({ onOpenDetails }: GridCatalogProps) {
   const { gridPokemons, isLoadingGrid, loadMore } = usePokemonGrid()
   const [activeCardId, setActiveCardId] = useState<number | null>(null)
 
@@ -19,6 +23,7 @@ export default function GridCatalog() {
             types={pokemon.types}
             isActive={pokemon.id === activeCardId}
             onActivate={() => setActiveCardId(pokemon.id)}
+            onOpenDetails={onOpenDetails}
           />
         ))}
       </div>
