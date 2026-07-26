@@ -59,3 +59,32 @@ export const fetchValidPokemonIds = async () => {
 
   return ids.sort((a: number, b: number) => a - b)
 }
+
+export const fetchValidSpeciesIds = async () => {
+  const response = await fetch(
+    "https://pokeapi.co/api/v2/pokemon-species?limit=100000&offset=0"
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar lista de especies");
+  }
+
+  const data = await response.json();
+
+  const ids = data.results.map((species: { url: string }) => {
+    const parts = species.url.split("/").filter(Boolean);
+    return Number(parts[parts.length - 1]);
+  });
+
+  return ids.sort((a: number, b: number) => a - b);
+};
+
+export const fetchByUrl = async (url: string) => {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("Recurso nao encontrado");
+  }
+
+  return response.json();
+};

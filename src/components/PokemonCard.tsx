@@ -10,9 +10,10 @@ interface PokemonCardProps {
     types: string[]
     isActive: boolean
     onActivate: () => void
+    onOpenDetails: (id: number) => void 
 }
 
-export default function PokemonCard({ id, name, sprite, animatedSprite, types, isActive, onActivate }: PokemonCardProps) {
+export default function PokemonCard({ id, name, sprite, animatedSprite, types, isActive, onActivate, onOpenDetails }: PokemonCardProps) {
     const [isHovering, setIsHovering] = useState(false)
     const [isAnimating, setIsAnimating] = useState(false)
 
@@ -52,7 +53,6 @@ export default function PokemonCard({ id, name, sprite, animatedSprite, types, i
             onClick={onActivate}
             className={`relative rounded-2xl overflow-hidden flex flex-col justify-between aspect-3/4 sm:aspect-4/5 lg:aspect-square cursor-pointer transition-transform hover:scale-105 ${cardBackground} shadow-[4px_4px_0px_rgba(0,0,0,0.25)]`}
         >
-
             <img
                 src={pokeballCardBg}
                 alt=""
@@ -69,17 +69,23 @@ export default function PokemonCard({ id, name, sprite, animatedSprite, types, i
                     </span>
                 </div>
 
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-serif italic font-bold shadow-sm">
+                <button 
+                    onClick={(e) => {
+                        e.stopPropagation() 
+                        onOpenDetails(id)
+                    }}
+                    className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 border-2 border-white flex items-center justify-center text-white text-xs sm:text-sm font-serif italic font-bold shadow-sm cursor-pointer hover:bg-white/40 hover:scale-110 transition-all z-20"
+                    title="Ver Ficha Completa"
+                >
                     i
-                </div>
+                </button>
             </div>
 
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[55%] flex items-center justify-center z-0">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[55%] flex items-center justify-center z-0 pointer-events-none">
                 <img
                     src={spriteToShow}
                     alt={name}
-                    className={`w-full h-full object-contain drop-shadow-md transition-transform ${isAnimating ? "scale-[0.9]" : "scale-100"
-                        }`}
+                    className={`w-full h-full object-contain drop-shadow-md transition-transform ${isAnimating ? "scale-[0.9]" : "scale-100"}`}
                 />
             </div>
 
@@ -107,7 +113,6 @@ export default function PokemonCard({ id, name, sprite, animatedSprite, types, i
                     )
                 })}
             </div>
-
         </div>
     )
 }
