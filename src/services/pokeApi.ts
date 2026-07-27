@@ -39,11 +39,14 @@ export const fetchPokemonBatch = async (idsOrNames: (string | number)[]) => {
     .filter((result) => result.status === "fulfilled")
     .map((result) => {
       const data = (result as PromiseFulfilledResult<any>).value;
+      const animatedVersions = data.sprites.versions?.["generation-v"]?.["black-white"]?.animated;
       return {
         id: data.id,
         name: data.name,
         sprite: data.sprites.front_default,
-        animatedSprite: data.sprites.versions['generation-v']['black-white'].animated.front_default || data.sprites.front_default,
+        animatedSprite: animatedVersions?.front_default || data.sprites.front_default,
+        shinySprite: data.sprites.front_shiny || data.sprites.front_default,
+        animatedShinySprite: animatedVersions?.front_shiny || data.sprites.front_shiny || data.sprites.front_default,
         types: data.types.map((typeInfo: any) => typeInfo.type.name),
       };
     });
@@ -87,4 +90,11 @@ export const fetchByUrl = async (url: string) => {
   }
 
   return response.json();
+};
+
+export const fetchPokemonsByType = async (type: string) => {
+  const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
+  if (!response.ok) throw new Error("Erro ao buscar tipo");
+  const data = await response.json();
+  return data.pokemon.map((p: any) => p.pokemon.name);
 };

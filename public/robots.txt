@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pokedex-react-sigma-three.vercel.app/sitemap.xml

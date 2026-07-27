@@ -50,7 +50,6 @@ export default function EvolutionChain({ evolutions, currentId, onNavigate }: Ev
             return (
               <div key={evo.id} className="flex items-center gap-1 xl:gap-3 shrink-0">
                 <div className="flex flex-col items-center">
-                  {/* Estágio Base da Evolução */}
                   <div
                     className={`flex flex-col items-center transition-all duration-300 cursor-pointer group ${isCurrent ? 'scale-110 drop-shadow-xl' : 'opacity-40 grayscale hover:opacity-100 hover:grayscale-0 hover:scale-105'}`}
                     onClick={() => { if (!isCurrent) onNavigate(evo.id); }}

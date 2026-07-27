@@ -6,6 +6,7 @@ import ViewToggle from "./components/ViewToggle"
 import PokemonModal from "./components/modal/PokemonModal"
 import { useViewMode } from "./hooks/useViewMode"
 import { useValidPokemonIds } from "./hooks/useValidPokemonIds"
+import DeveloperCredit from "./components/DeveloperCredit"
 
 export default function App() {
   const { isGridView, toggleView } = useViewMode()
@@ -32,6 +33,7 @@ export default function App() {
 
   return (
     <main className="bg-linear-to-b from-[#6ab7f5] to-white min-h-screen flex flex-col justify-center items-center relative">
+      <DeveloperCredit />
       <AppHeader />
       <ViewToggle isGridView={isGridView} onToggle={toggleView} />
 
