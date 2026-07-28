@@ -3,6 +3,7 @@ import { fetchPokemon, fetchByUrl } from "../services/pokeApi"
 import { extractSprite, extractShinySprite } from "../utils/spriteExtractors"
 import { fetchEvolutionChain } from "./evolutionChain"
 import type { EvolutionStage } from "./evolutionChain"
+import { getRegionFromGeneration } from "../utils/regionMap"
 
 export type { EvolutionStage, EvolutionDetail } from "./evolutionChain"
 
@@ -20,6 +21,7 @@ export interface PokemonDetails {
   flavorText: string
   color: string
   generation: string
+  region: string
   baseExp: number
   captureRate: number
   evolutions: EvolutionStage[]
@@ -87,6 +89,7 @@ export function usePokemonDetails(id: number | null) {
           flavorText: englishFlavorText,
           color: speciesData.color.name,
           generation: formattedGen,
+          region: getRegionFromGeneration(speciesData.generation.name),
           baseExp: pokemonData.base_experience,
           captureRate: speciesData.capture_rate,
           evolutions,

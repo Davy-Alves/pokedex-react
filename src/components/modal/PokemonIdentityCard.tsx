@@ -28,7 +28,7 @@ export default function PokemonIdentityCard({ details }: PokemonIdentityCardProp
   return (
     <div className="bg-white/90 rounded-xl p-6 flex flex-col items-center justify-center text-center border border-white shadow-inner relative overflow-hidden shrink-0 lg:h-full">
       <span className="absolute top-4 left-4 bg-black/10 text-gray-800 text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wider">
-        {details.generation}
+        {details.generation} · {details.region}
       </span>
 
       <RarityBadge

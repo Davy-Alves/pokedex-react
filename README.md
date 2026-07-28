@@ -1,36 +1,62 @@
+![Pokédex React Banner](./docs/screenshots/banner.png)
+
 # 📱 Pokédex Application
 
-An interactive and responsive web application that replicates the functionality of a Pokédex, allowing users to search for Pokémon in detail by name or ID number. The project consumes real-time data from the public PokéAPI, featuring classic animations, dynamic loading states, and type-based visual theming.
+An interactive and responsive web application that replicates the functionality of a Pokédex, allowing users to search, browse, and filter Pokémon in detail, from a classic single-view search to a full grid catalog with an in-depth encyclopedia modal. The project consumes real-time data from the public PokéAPI, cross-referencing multiple endpoints to deliver rich, accurate information.
 
-Built as part of my personal portfolio to demonstrate modern front-end development practices, efficient componentization, custom hooks, and utility-first styling.
+Built as part of my personal portfolio to demonstrate modern front-end development practices: efficient componentization, custom hooks, API data modeling, and utility-first styling.
+
+---
+
+## 📸 Screenshots
+
+| Classic View | Grid Catalog | Details Modal |
+|---|---|---|
+| ![Classic Pokédex](./docs/screenshots/classic-view.png) | ![Grid Catalog](./docs/screenshots/grid-view.png) | ![Pokémon Details](./docs/screenshots/details-modal.png) |
 
 ---
 
 ## 🚀 Technologies Used
 
-The project was developed using a modern JavaScript/TypeScript ecosystem:
-
-- **[React](https://react.dev/):** Library for building component-based user interfaces and managing state (`useState`, `useEffect`, custom hooks).
-- **[TypeScript](https://www.typescriptlang.org/):** Static typing to ensure greater predictability, safety, and auto-completion during development.
-- **[Vite](https://vite.dev/):** Extremely fast build tool for the front-end ecosystem.
-- **[Tailwind CSS](https://tailwindcss.com/):** Utility-first CSS framework for rapid, responsive styling focused on visual performance.
+- **[React](https://react.dev/):** Component-based UI and state management (`useState`, `useEffect`, custom hooks).
+- **[TypeScript](https://www.typescriptlang.org/):** Static typing for predictability, safety, and autocompletion.
+- **[Vite](https://vite.dev/):** Fast build tool for the front-end ecosystem.
+- **[Tailwind CSS](https://tailwindcss.com/):** Utility-first CSS framework for rapid, responsive styling.
+- **[react-helmet-async](https://github.com/staylor/react-helmet-async):** Dynamic document head management for per-page SEO.
 - **[PokéAPI](https://pokeapi.co/):** RESTful API used to consume up-to-date data from the Pokémon universe.
 
 ---
 
 ## ⚙️ Core Features
 
-- **Flexible Search:** Direct search for any Pokémon using its name or Pokédex number.
-- **Autocomplete Search:** Real-time suggestions as you type, filtered from the full list of Pokémon names.
-- **Sequential Navigation:** Pagination buttons (`Prev` and `Next`) to smoothly advance or go back through the registry numbers.
-- **Dynamic Visualization:** Display of animated sprites (classic Generation V: Black & White style) seamlessly integrated into the layout.
-- **Type Icons:** Visual badges displaying each Pokémon's type(s), with custom icons and type-accurate colors.
-- **Shiny Toggle:** A dedicated button to switch between a Pokémon's default and shiny sprite on demand.
-- **Dynamic Background:** The Pokédex screen background changes based on the Pokémon's primary type, using custom-illustrated pixel art scenes.
-- **State Handling:**
-  - Visual feedback display during data fetching (`Loading...`).
-  - Graceful error handling when a searched term is not found (`Not found :(`), with a dedicated fallback background.
-- **Responsive Design:** Interface optimized via Tailwind using dynamic values (`clamp`, custom breakpoints) to adjust perfectly across different screen sizes.
+### Classic Pokédex
+- Search by name or Pokédex number, with real-time autocomplete suggestions
+- Sequential navigation (`Prev` / `Next`) with automatic handling of non-existent IDs — jumps to the next valid one with an on-screen notice
+- Animated sprites (Generation V: Black & White style) with automatic fallback to static sprites when unavailable
+- Type badges with custom icons and type-accurate colors
+- Shiny toggle to switch between default and shiny sprites
+- Dynamic background scene based on the Pokémon's primary type, with custom-illustrated pixel art
+
+### Grid Catalog
+- Browseable grid of all Pokémon, paginated in batches (loaded via the real API name list to avoid ID numbering gaps)
+- Interactive cards: hover (desktop) or tap (mobile) animates the sprite; type-colored background with pokéball watermark
+- Global shiny view toggle, applied to every card at once
+- **Smart filters:** search/filter by Type, Rarity (Legendary/Mythical/Baby), Region, and Base Form — fully custom dropdowns matching the app's visual identity
+
+### Encyclopedia Modal
+- Full details view: stats (color-coded bars), height/weight, abilities, Pokédex description, base EXP, catch rate, generation and region
+- Legendary / Mythical / Baby status badges, with a matching special border/glow
+- Breeding info: gender rate, growth rate, egg groups
+- Cry playback button
+- Shiny toggle inside the modal (resets on navigation)
+- Full evolution chain, clickable, including alternate/power forms (Mega, Primal, Gigantamax, Origin, Crowned, and more), each with evolution triggers (level, item, friendship, trade, etc.)
+- Correct handling of regional forms (Alolan, Galarian, Hisuian, Paldean) and species-vs-Pokémon ID mismatches (e.g. Mega Evolutions)
+- Prev/next navigation without closing the modal
+
+### SEO
+- Static meta tags (title, description, keywords, Open Graph, Twitter Cards) for rich link previews
+- `robots.txt` and `sitemap.xml` for search engine indexing
+- Dynamic per-Pokémon `<title>` and meta description when the details modal is open
 
 ---
 
@@ -38,52 +64,87 @@ The project was developed using a modern JavaScript/TypeScript ecosystem:
 
 The project follows a clear separation of concerns:
 
-- **Hooks** (`src/hooks/`) encapsulate state and business logic — data fetching, shiny toggling, and autocomplete filtering — independent of any UI.
-- **Components** (`src/components/`) are purely presentational, receiving data and callbacks via props.
+- **Hooks** (`src/hooks/`) encapsulate state and business logic — data fetching, filtering, shiny toggling, valid-ID navigation, evolution chain parsing — independent of any UI.
+- **Components** (`src/components/`) are purely presentational, receiving data and callbacks via props. Larger features (like the details modal and the filter bar) are broken down into their own subfolders instead of living in a single file.
 - **`App.tsx`** acts as an orchestrator, composing hooks and components without owning complex logic itself.
 
-This structure keeps each piece independently readable and testable, and made it easy to extend the app with new features (like the shiny toggle) without bloating a single file.
+This structure kept the codebase manageable even as the project grew from a single search view into a multi-mode catalog with a full encyclopedia — components that started as one large file (like the details modal, ~424 lines) were refactored down to focused, independently readable pieces (~117 lines) once their responsibilities became clear.
 
 ---
 
 ## 📂 Project Structure
 
-The file organization follows standard separation of concerns practices:
-
 ````text
 pokedex/
-├── public/                    # Global static files
+├── docs/
+│   └── screenshots/            # README images
+├── public/
+│   ├── robots.txt
+│   └── sitemap.xml
 └── src/
     ├── assets/
-    │   ├── logoPokedex.svg    # Main Pokédex illustration
-    │   ├── shinyIcon.svg      # Shiny toggle icon
-    │   ├── types/             # Type icon SVGs (fire, water, grass, etc.)
-    │   └── backgrounds/       # Type-based background scenes
-    ├── components/            # Reusable, presentational UI components
+    │   ├── logoPokedex.svg
+    │   ├── shinyIcon.svg
+    │   ├── pokemonLogo.svg
+    │   ├── types/                  # Type icon SVGs
+    │   ├── backgrounds/            # Type-based background scenes
+    │   └── cards/                  # Grid card decorative assets
+    ├── components/
     │   ├── TypeBadges.tsx
     │   ├── PokedexBackground.tsx
     │   ├── PokemonName.tsx
     │   ├── ShinyToggle.tsx
-    │   └── SearchSuggestions.tsx
-    ├── hooks/                 # Custom hooks for state and business logic
-    │   ├── usePokemon.ts      # Fetching, navigation, current Pokémon state
-    │   ├── useShiny.ts        # Shiny display state and auto-reset
-    │   └── useAutocomplete.ts # Full name list and live search filtering
+    │   ├── SearchSuggestions.tsx
+    │   ├── ClassicPokedex.tsx
+    │   ├── GridCatalog.tsx
+    │   ├── PokemonCard.tsx
+    │   ├── AppHeader.tsx
+    │   ├── ViewToggle.tsx
+    │   ├── DeveloperCredit.tsx
+    │   ├── SEO.tsx
+    │   ├── filters/
+    │   │   ├── FilterBar.tsx
+    │   │   └── dropdowns/          # Custom Type/Rarity/Text dropdowns
+    │   └── modal/
+    │       ├── PokemonModal.tsx
+    │       ├── PokemonIdentityCard.tsx
+    │       ├── EvolutionChain.tsx
+    │       ├── PokedexEntryCard.tsx
+    │       ├── AbilitiesCard.tsx
+    │       ├── TrainingCard.tsx
+    │       ├── BreedingCard.tsx
+    │       ├── BaseStatsCard.tsx
+    │       ├── RarityBadge.tsx
+    │       ├── PokemonTypesRow.tsx
+    │       └── InfoCard.tsx
+    ├── hooks/
+    │   ├── usePokemon.ts
+    │   ├── useShiny.ts
+    │   ├── useAutocomplete.ts
+    │   ├── usePokemonGrid.ts
+    │   ├── usePokemonFilter.ts
+    │   ├── usePokemonDetails.ts
+    │   ├── useValidPokemonIds.ts
+    │   ├── useViewMode.ts
+    │   └── evolutionChain.ts       # Evolution chain fetch/parse logic
     ├── services/
-    │   └── pokeApi.ts         # PokéAPI request and search handling functions
+    │   └── pokeApi.ts
     ├── utils/
-    │   ├── typeIcons.ts       # Type → icon/color mapping
-    │   └── typeBackgrounds.ts # Type → background scene mapping
-    ├── App.tsx                # Main component, orchestrates hooks and layout
-    ├── index.css               # Global style configurations and Tailwind setup
-    └── main.tsx                # React entry point and DOM tree rendering
+    │   ├── typeIcons.ts
+    │   ├── typeBackgrounds.ts
+    │   ├── filterStyles.ts
+    │   ├── pokemonFormStyles.ts
+    │   ├── statColor.ts
+    │   ├── spriteExtractors.ts
+    │   └── regionMap.ts
+    ├── App.tsx
+    ├── index.css
+    └── main.tsx
 ````
 
 ---
 
 ## 🛠️ How to Run the Project Locally
-
-Follow the steps below to run the application on your machine:
 
 1. **Clone the repository:**
 
@@ -114,15 +175,21 @@ npm run dev
 
 ---
 
-## 🗺️ Roadmap & Next Steps
+## 🗺️ Roadmap
 
-This project is continuously evolving. Here is the planned roadmap:
+- **[x] Phase 1:** Classic Pokédex — search, navigation, shiny toggle, type-based dynamic background
+- **[x] Phase 2:** Grid Catalog — view mode switching, responsive card layout, Figma-based visual design
+- **[x] Phase 3:** Encyclopedia — full details modal, cross-referencing multiple PokéAPI endpoints, evolution chain with alternate forms
+- **[x] Phase 4:** Smart Filters & SEO — Type/Rarity/Region/Form filtering in the Grid, static and dynamic SEO
+- **[ ] Next:** TBD
 
-- **[x] Phase 1:** Front-end Architecture Refactoring (Custom Hooks & Componentization)
-- **[ ] Phase 2:** Node.js Express Server Setup
-- **[ ] Phase 3:** Database Integration (SQLite + Prisma ORM)
-- **[ ] Phase 4:** Fullstack Integration (Capture button & User metrics dashboard)
-- **[ ] Phase 5:** Classic Generation toggles
+---
+
+## 🙏 Acknowledgments
+
+- Type icons by [duiker101/pokemon-type-svg-icons](https://github.com/duiker101/pokemon-type-svg-icons)
+- Initial layout inspiration from a [Manual do Dev](https://www.youtube.com/watch?v=SjtdH3dWLa8) tutorial, later expanded far beyond its original scope
+- Pokémon data provided by [PokéAPI](https://pokeapi.co/)
 
 ## 📄 License
 

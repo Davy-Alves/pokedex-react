@@ -52,9 +52,14 @@ const extractEvolutions = (
 }
 
 const specialFormKeywords = [
-  "-mega", "-primal", "-gmax", "-origin", "-crowned", "-eternamax",
-  "-therian", "-ultra", "-complete", "-dusk", "-dawn", "-resolute", "-blade", "-hero"
+  "mega", "primal", "gmax", "origin", "crowned", "eternamax",
+  "therian", "ultra", "complete", "dusk", "dawn", "resolute", "blade", "hero"
 ]
+
+const hasSpecialFormKeyword = (varietyName: string) => {
+  const segments = varietyName.split("-")
+  return specialFormKeywords.some((keyword) => segments.includes(keyword))
+}
 
 export async function fetchEvolutionChain(
   evolutionChainUrl: string,
@@ -86,7 +91,7 @@ export async function fetchEvolutionChain(
       const stagePokemonData = await fetchByUrl(defaultVariety.pokemon.url)
 
       const megaVarieties = stageSpeciesData.varieties.filter((v: any) =>
-        specialFormKeywords.some((keyword) => v.pokemon.name.includes(keyword))
+        hasSpecialFormKeyword(v.pokemon.name)
       )
 
       const megaResults = await Promise.allSettled(

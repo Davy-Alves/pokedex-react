@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { fetchPokemonList, fetchPokemonBatch } from "../services/pokeApi"
+import { fetchPokemonBatch } from "../services/pokeApi"
 
 const BATCH_SIZE = 60
 
@@ -8,21 +8,25 @@ interface GridPokemon {
   name: string
   sprite: string
   animatedSprite: string
+  shinySprite: string
+  animatedShinySprite: string
   types: string[]
 }
 
-export function usePokemonGrid() {
+export function usePokemonGrid(filteredNames: string[]) {
   const [gridPokemons, setGridPokemons] = useState<GridPokemon[]>([])
   const [isLoadingGrid, setIsLoadingGrid] = useState(false)
-  const allNamesRef = useRef<string[]>([])
+  
   const nextIndexRef = useRef(0)
-  const hasLoadedInitial = useRef(false)
 
   const loadMore = async () => {
+    if (isLoadingGrid) return;
+    
     setIsLoadingGrid(true)
 
     const startIndex = nextIndexRef.current
-    const namesToFetch = allNamesRef.current.slice(startIndex, startIndex + BATCH_SIZE)
+    
+    const namesToFetch = filteredNames.slice(startIndex, startIndex + BATCH_SIZE)
     nextIndexRef.current = startIndex + BATCH_SIZE
 
     if (namesToFetch.length === 0) {
@@ -41,17 +45,13 @@ export function usePokemonGrid() {
   }
 
   useEffect(() => {
-    if (hasLoadedInitial.current) return
-    hasLoadedInitial.current = true
-
-    fetchPokemonList()
-      .then((results) => {
-        const names = results.map((pokemon: { name: string }) => pokemon.name)
-        allNamesRef.current = names
-        loadMore()
-      })
-      .catch((error) => console.log(error))
-  }, [])
+    setGridPokemons([])
+    nextIndexRef.current = 0
+    
+    if (filteredNames.length > 0) {
+      loadMore()
+    }
+  }, [filteredNames])
 
   return { gridPokemons, isLoadingGrid, loadMore }
 }

@@ -7,13 +7,16 @@ interface PokemonCardProps {
     name: string
     sprite: string
     animatedSprite: string
+    shinySprite: string
+    animatedShinySprite: string
     types: string[]
+    isShiny: boolean
     isActive: boolean
     onActivate: () => void
     onOpenDetails: (id: number) => void 
 }
 
-export default function PokemonCard({ id, name, sprite, animatedSprite, types, isActive, onActivate, onOpenDetails }: PokemonCardProps) {
+export default function PokemonCard({ id, name, sprite, animatedSprite, shinySprite, animatedShinySprite, types, isShiny, isActive, onActivate, onOpenDetails }: PokemonCardProps) {
     const [isHovering, setIsHovering] = useState(false)
     const [isAnimating, setIsAnimating] = useState(false)
 
@@ -44,7 +47,9 @@ export default function PokemonCard({ id, name, sprite, animatedSprite, types, i
         }
     }, [isHovering, isActive])
 
-    const spriteToShow = isAnimating ? animatedSprite : sprite
+    const spriteToShow = isShiny
+        ? (isAnimating ? animatedShinySprite : shinySprite)
+        : (isAnimating ? animatedSprite : sprite)
 
     return (
         <div
